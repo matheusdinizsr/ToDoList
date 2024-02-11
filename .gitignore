@@ -1,0 +1,21 @@
+# Binários e diretórios de saída
+/bin/
+/obj/
+/.vs/
+
+# Arquivos de configuração do Visual Studio
+*.suo
+*.user
+*.sln.docstates
+
+# Arquivos de configuração do Rider (JetBrains Rider)
+.idea/
+*.sln.iml
+
+# Arquivos temporários e caches
+[Tt]humbs.db
+*.DS_Store
+
+# Arquivos de log e exceção
+*.log
+*.vscode-crash.txt

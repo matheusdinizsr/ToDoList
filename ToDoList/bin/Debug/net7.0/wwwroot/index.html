@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>To Do List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container-sm">
+
+        <div class="card principal" id="app">
+            <h5 class="card-header">To-Do List</h5>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-12 col-sm-9">
+                        <input type="text" class="form-control" v-model="newTodo" />
+                    </div>
+                    <div class="col-3">
+                        <a href="#" class="btn btn-primary " @click="insert">Adicionar</a>
+                    </div>
+                </div>
+
+                <TransitionGroup name="fade" tag="ul">
+                    <div class="list-group" v-for="x in todos" :key="x">
+                        <div class="list-group-item" @click="remove(x)" >
+                            <div class="row">
+                                <div class="col">{{x.text}}</div>
+                                <div class="col">{{x.createDate}}</div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </TransitionGroup>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3"></script>
+</body>
+</html>
+
+<style>
+    .principal {
+        background-color: antiquewhite;
+        margin-top: 30px;
+    }
+
+    .list-group-item:hover {
+        background-color: chocolate;
+        cursor: pointer;
+        transition: background-color ease-out 0.2s;
+    }
+
+    /* 1. declare transition */
+    .fade-move,
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+    }
+
+    /* 2. declare enter from and leave to state */
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+        transform: scaleY(0.01) translate(30px, 0);
+    }
+
+    /* 3. ensure leaving items are taken out of layout flow so that moving
+      animations can be calculated correctly. */
+    .fade-leave-active {
+        position: absolute;
+    }
+</style>
+
+<script>
+    window.banana = Vue.createApp({
+        data() {
+            return {
+                todos: [],
+                newTodo: ''
+            }
+        },
+        methods: {
+            async insert() {
+                let payload = {
+                        oi: 'tchau',
+                        input: this.newTodo
+                };
+                let jsonPayload = JSON.stringify(payload);
+                let response = await fetch('https://localhost:7076/api/ToDo/', {
+                    method: 'POST',
+                    body: jsonPayload,
+                    headers: {
+                       'content-type': 'application/json'
+                    }
+                } );
+                this.todos.push(this.newTodo);
+                this.newTodo = ''
+                
+            },
+            async remove(todo) {
+                let response = await fetch('https://localhost:7076/api/ToDo/delete?input=' + todo.createDate, {
+                    method: 'DELETE'
+                });
+                var index = this.todos.indexOf(todo);
+                
+                this.todos.splice(index, 1);
+
+            },
+            async getData() {
+                let response = await fetch('https://localhost:7076/api/ToDo/');
+                this.todos = await response.json();
+            }
+        }, 
+        created() {
+            this.getData();
+        }
+    }).mount('#app')
+</script>
