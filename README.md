@@ -9,7 +9,6 @@ Possui um funcionamento simples, em que é possível adicionar e remover tarefas
 
 ## Demonstração
 
-![Calculadora em funcionamento.](https://i.imgur.com/gGkBaQF.gif)
 
 ## Funcionalidades
 
